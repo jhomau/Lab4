@@ -5,21 +5,25 @@ var valid = require("../utils/valid");
 
 router.post('/user', async(req,res,next)=>{
     var params = req.body;
-    var pass = 0;
-    var em = 0;
+  
     params["registerdate"] = new Date();
-    if(valid.checkPassword(params.password==true)){
-        pass++;
-    }
-    if(valid.checkEmail(params.email==true)){
-        em++;
-    }
-    if(pass,em =! 0){
-        
-    }
-    var user = new USER(params);
+    var b = valid.checkParams(params);
+    var a = valid.checkEmail(params.email);
+    var c = valid.checkPassword(params.password);
+    if(a==true && b==true&&c==true){
+        var user = new USER(params);
     var result = await user.save();
     res.status(200).json(result);
+    }
+    if(a==false){
+        res.status(300).json({msn : "Verifique que su Email sea valido."});
+    }
+    if(b==false){
+        res.status(300).json({msn : "Verifique que halla escrito todos los parametros."});
+    }
+    if(c==false){
+        res.status(300).json({msn : "Su contrasena debe tener al menos 2 numeros seguidos y letras."});
+    }    
 });
 router.get('/user',(req,res)=>{
     var params = req.query;
